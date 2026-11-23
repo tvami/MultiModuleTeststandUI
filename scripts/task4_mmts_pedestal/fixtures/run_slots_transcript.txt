@@ -1,0 +1,74 @@
+########## registering boards: A=320XLF4CQH00443 B=320XLR4DQE00020 C=320XHF4DPM02021   [18:09:20 CDT]
+swap recorded at 2026-09-10T23:09:20Z
+  open    slot A  320XLF4CQH00443
+  open    slot B  320XLR4DQE00020
+  open    slot C  320XHF4DPM02021
+
+########## A: params initLD-Full-3b LD-Full 3 POWER=  (320XLF4CQH00443: LD Full, 3 ROCs, power board)   [18:09:25 CDT]
+
+########## A: bring-up (LD-Full, 3 ROCs, power management board)   [18:09:30 CDT]
+bringup try 1 of 8: running (60 to 90 s) ...
+bringup try 1: 0/3 ROCs
+bringup try 2 of 8: running (60 to 90 s) ...
+  i2c-server start 1 of 3: running (about 25 s) ...
+READY  bringup=2 i2c=1  [I2C] Board identification: V3 LD Full HB
+
+########## A: SKIPPING the 12+12 probe (SKIP_PROBE=1): the shipped map is already known good   [18:11:00 CDT]
+
+########## A: gate   [18:11:00 CDT]
+# slot A  board 320XLF4CQH00443  config configs/initLD-Full-3b_muxA_ped.yaml
+puller up on 6001
+scanning, 20 to 40 s
+  daq: 6/6  link0=8 link1=8 link4=8 link5=8 link8=8 link9=8
+  trg: 12/12  link0=7 link11=7
+GATE: PASS -- safe to run pedestals
+
+########## A: pedestal 1 of 5 (unit test, ~30 s)   [18:11:40 CDT]
+run   entries   CRC pass c0h0..   adc_mean   badBX   dir
+1     2347488   1.000 1.000 1.000 1.000 1.000 1.000    101 89 99 114 93 92   0.000   run_20260910_231140
+
+########## A: pedestals 2..5 (~30 s each)   [18:12:20 CDT]
+2     2347488   1.000 1.000 1.000 1.000 1.000 1.000    101 89 99 114 93 92   0.000   run_20260910_231220
+3     2347488   1.000 1.000 1.000 1.000 1.000 1.000    101 89 99 114 93 92   0.000   run_20260910_231300
+4     2347488   1.000 1.000 1.000 1.000 1.000 1.000    101 89 99 114 93 92   0.000   run_20260910_231340
+5     2347488   1.000 1.000 1.000 1.000 1.000 1.000    101 89 99 114 93 92   0.000   run_20260910_231420
+
+########## A: finder header positions (23 everywhere = right edge)   [18:14:40 CDT]
+########## A: hexmaps + per-half check (every half adc_stdd > 0, else FROZEN)   [18:14:45 CDT]
+########## A: DONE   [18:15:00 CDT]
+
+########## A: EXIT 0 (pedestals ran)   [18:15:00 CDT]
+collect_plots: slot A <- run_20260910_231420  (320XLF4CQH00443)
+
+########## B: params initLD-Left-3b LD-Semi 2 --external-power  (320XLR4DQE00020: LD Right, 2 ROCs, external power)   [18:15:05 CDT]
+
+########## B: bring-up (LD-Semi, 2 ROCs, --external-power)   [18:15:05 CDT]
+bringup try 1 of 8: running (60 to 90 s) ...
+bringup try 2 of 8: running (60 to 90 s) ...
+bringup try 3 of 8: running (60 to 90 s) ...
+READY  bringup=3 i2c=1  [I2C] Board identification: V3 LD Semi
+
+########## B: gate   [18:18:00 CDT]
+  daq: 2/4  link0=8 link1=8
+GATE FAILED -- not spending pedestals
+
+########## B: EXIT 4 (delay scan gate failed -- pedestals not spent)   [18:18:30 CDT]
+collect_plots: no hexmaps under /data/mmts/Results/320XLR4DQE00020/MuxB_ped/pedestal_run
+
+########## C: params initHD-Full-trophyV3 HD-Full 6 POWER=  (320XHF4DPM02021: HD Full, 6 ROCs, power board)   [18:18:35 CDT]
+
+########## C: bring-up (HD-Full, 6 ROCs, power management board)   [18:18:35 CDT]
+bringup try 1 of 8: running (60 to 90 s) ...
+READY  bringup=1 i2c=1  [I2C] Board identification: V3 HD Full
+
+########## C: gate   [18:20:00 CDT]
+GATE: PASS -- safe to run pedestals
+
+########## C: pedestal 1 of 5 (unit test, ~30 s)   [18:20:10 CDT]
+1     2347488   1.000 1.000 1.000 1.000 1.000 1.000    101 89 99 114 93 92   0.000   run_20260910_232010
+
+########## C: FIRST PEDESTAL STALLED -- not spending 4 more; raw kept under MuxC_ped   [18:24:20 CDT]
+
+########## C: EXIT 5 (first pedestal stalled)   [18:24:20 CDT]
+
+########## ALL SLOTS DONE -- 1 of 3 slots produced pedestals   [18:24:25 CDT]

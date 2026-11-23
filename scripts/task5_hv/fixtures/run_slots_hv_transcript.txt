@@ -1,0 +1,74 @@
+########## bias points: 0 300 V   compliance 10.0 uA   leak check 0 1 10 100 300 V, abort above 1 uA   [09:12:01 PDT]
+
+########## HV routing: none (one cable, moved by hand between slots)   [09:12:01 PDT]
+
+########## HV instrument   [09:12:01 PDT]
+HV idn ok {"idn": "KEITHLEY INSTRUMENTS INC.,MODEL 2410,1234567,C33 Oct 4 2010", "limit_uA": 10.0, "polarity": "Reverse", "resource": "ASRL/dev/ttyUSB0::INSTR", "terminal": "Front"}
+
+########## registering boards: A=320MHF2TDSB0193 C=320XLR4DQE00020   [09:12:04 PDT]
+
+########## A: HV routing to slot A   [09:12:05 PDT]
+########################################################################
+##  MOVE THE HV CABLE to slot A, then press Continue. The Keithley is at 0 V with the output off.
+########################################################################
+HV switch ok cable moved to slot A
+
+########## A: params initHD-Full-trophyV3 HD-Full 6 POWER=  (320MHF2TDSB0193: HD Full, 6 ROCs, power board)   [09:13:40 PDT]
+
+########## A: bring-up and gate (one pedestal at 0 V)   [09:13:40 PDT]
+
+########## A: bring-up (HD-Full, 6 ROCs, power management board)   [09:13:41 PDT]
+bringup try 1 of 8
+bringup try 2 of 8
+READY A 6 ROCs
+GATE: PASS
+
+########## A: pedestal 1 of 1 (unit test, ~30 s)   [09:17:02 PDT]
+1     10000     0.999 0.999 1.000 1.000 0.998 1.000 | adc_mean 201 200 199 202 200 201 | badBX 0.000
+
+########## A: DONE   [09:17:44 PDT]
+
+########## A: EXIT 0 (gate passed)   [09:17:44 PDT]
+
+########## A: HV on, compliance 10.0 uA   [09:17:45 PDT]
+HV on ok {"limit_uA": 10.0, "polarity": "Reverse", "resource": "ASRL/dev/ttyUSB0::INSTR", "terminal": "Front"}
+
+########## A: leakage check at 0 1 10 100 300 V   [09:17:50 PDT]
+     0 V      0.001 uA
+     1 V      0.002 uA
+    10 V      0.004 uA
+   100 V      0.021 uA
+   300 V      0.084 uA
+HV leakcheck ok {"limit_uA": 10.0, "polarity": "Reverse", "readings": {"0": 1e-09, "1": 2e-09, "10": 4e-09, "100": 2.1e-08, "300": 8.4e-08}, "resource": "ASRL/dev/ttyUSB0::INSTR", "terminal": "Front"}
+
+########## A: BV 0 V -- ramp and read leakage   [09:18:40 PDT]
+HV set ok {"current_A": 1e-09, "limit_uA": 10.0, "polarity": "Reverse", "resource": "ASRL/dev/ttyUSB0::INSTR", "terminal": "Front", "volts": 0.0}
+
+########## A: pedestals 1..2 at BV0   [09:18:48 PDT]
+1     10000     0.999 0.999 1.000 1.000 0.998 1.000 | adc_mean 201 200 199 202 200 201 | badBX 0.000
+2     10000     1.000 0.999 1.000 1.000 0.999 1.000 | adc_mean 201 200 199 202 200 201 | badBX 0.000
+
+########## A: BV 300 V -- ramp and read leakage   [09:20:10 PDT]
+HV set ok {"current_A": 8.4e-08, "limit_uA": 10.0, "polarity": "Reverse", "resource": "ASRL/dev/ttyUSB0::INSTR", "terminal": "Front", "volts": 300.0}
+
+########## A: pedestals 1..2 at BV300   [09:20:28 PDT]
+1     10000     0.999 0.999 1.000 1.000 0.998 1.000 | adc_mean 201 200 199 202 200 201 | badBX 0.000
+2     10000     1.000 0.999 1.000 1.000 0.999 1.000 | adc_mean 201 200 199 202 200 201 | badBX 0.000
+
+########## A: bias scan done, 2 of 2 points   [09:21:50 PDT]
+
+########## A: HV off (ramp to 0, output off)   [09:21:51 PDT]
+HV off ok {"output": false}
+
+########## C: HV routing to slot C   [09:22:00 PDT]
+HV switch ok cable moved to slot C
+
+########## C: params initLD-Left-3b LD-Semi 2   (320XLR4DQE00020: LD Right, 2 ROCs, external power)   [09:22:40 PDT]
+
+########## C: bring-up and gate (one pedestal at 0 V)   [09:22:40 PDT]
+bringup try 1 of 8
+GATE FAILED
+
+########## C: EXIT 4 (delay scan gate failed -- no HV applied)   [09:29:10 PDT]
+
+########## ALL SLOTS DONE -- 1 of 2 slots produced pedestals, 2 bias points in total   [09:29:11 PDT]

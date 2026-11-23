@@ -154,6 +154,59 @@ MMTS_channel_config:
     IP: Kria IP Address like 192.168.50.172
     pullerPORT: 6025
     type: Kria
+  ### The three multiplexer-board slots (task4, task5). HVchannel is only read
+  ### when MMTS_bench.hv.switch is vitrek.
+  A:
+    HVchannel: 25
+    IP: Kria IP Address like 192.168.50.172
+    pullerPORT: 6001
+    type: Kria
+  B:
+    HVchannel: 26
+    IP: Kria IP Address like 192.168.50.172
+    pullerPORT: 6001
+    type: Kria
+  C:
+    HVchannel: 27
+    IP: Kria IP Address like 192.168.50.172
+    pullerPORT: 6001
+    type: Kria
+### Multi Pedestal Run (task4): the bench behind hexactrl-script/multimodule.
+### client_host owns daq-client, unpack, ROOT and the $MM scripts. Leave it empty
+### when the GUI host is the client host; set user@host to reach it over ssh.
+MMTS_bench:
+  client_host: ''
+  client_shell: 'bash -lc'   ### login shell, so the client's ~/.bashrc exports apply
+  ### Kria dropdown on the task4/task5 pages; the first is preselected. The page
+  ### also takes a typed address. Empty list = the client host's own KRIA_IP.
+  krias: []
+  slots: [A, B, C]
+  default_nruns: 5
+  default_label: ped
+  skip_probe: 1              ### 1 = use the shipped link map; a 12+12 probe costs a bring-up
+  bringup_tries: 12
+
+  ### HV pedestal scan (task5). The instrument itself is under MMTS_hardwares.
+  hv:
+    ### none = one HV cable, moved by hand, the job pauses and asks.
+    ### vitrek = three cables into a Vitrek 964i, relay per slot.
+    switch: none
+    settle_s: 5                            ### after reaching a voltage, before reading
+    leak_check_volts: [0, 1, 10, 100, 300] ### the single-module stand's own list
+    ### 1000 uA = 1 mA. Decided 2026-09-16 after every slot aborted at the 0 V
+    ### point: this bench reads 2.86 uA lit / 1.51 uA dark at ZERO bias (open
+    ### bench, no dark box, plus an unexplained dark residual), so a 1 uA gate
+    ### can never be passed here. At 1 mA the check is a SHORT detector just
+    ### below the 1.05 mA compliance, not a sensor-quality check: it no longer
+    ### catches a mildly leaky sensor. Lower it per run in the form when the
+    ### modules are in the dark and the zero-bias offset is understood.
+    leak_abort_uA: 1000                    ### above this below 500 V, skip the slot
+    pause_timeout_s: 3600                  ### how long "move the cable" waits for Continue
+    ### hv.py runs on the CLIENT host and imports the single-module stand's own
+    ### driver and configuration.yaml; these two say where to find that GUI.
+    gui_dir: /home/hep/hgcal-module-testing-gui
+    python: python3
+
 MMTS_package_path:
   HGCal_Module_Production_Toolkit: external_packages/HGCal_Module_Production_Toolkit
   hgcal_module_testing_gui: external_packages/hgcal-module-testing-gui
@@ -163,6 +216,14 @@ MMTS_hardwares:
     Resource: 'ASRL/dev/serial/by-id/usb-FTDI_USB_Serial_Converter_FT9GC67T-if00-port0::INSTR' ## or 'ASRL/dev/ttyUSB1::INSTR'
     Terminal: Rear ## available options: "Front" or "Rear"
     WiresPolarization: Forward ## available options: "Forward" or "Reverse"
+    ### 🔑 1.05 mA, the driver's own default and what the single-module stand
+    ### runs. NOT lower: the 2410 refuses a measure range above the compliance
+    ### range, and KeithleyPowerSupply hardcodes the 100 uA range and switches
+    ### up to 1 mA above 50 uA. A 10 uA compliance gave error 824 "Cannot exceed
+    ### compliance range" and a bogus 1.48 uA reading AT 0 V (2026-09-16).
+    ### Protection against a short comes from the leakage abort, not from here.
+    CurrentLimit: 5.25e-3   ### compliance in A; must stay ABOVE leak_abort_uA
+    MaxVoltage: 800         ### instrument ceiling; board_params caps LD at 600
     BaudRate: 9600 ## this should be matched with keithley
   vitek:
     DiscoveryMode: by-id
